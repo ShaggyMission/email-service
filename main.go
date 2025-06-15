@@ -6,6 +6,7 @@ import (
 	"email-service/internal/handlers"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-contrib/cors"
 )
 
 func main() {
@@ -19,9 +20,12 @@ func main() {
 
 	r := gin.Default()
 
+	r.Use(cors.Default())
+
 	r.POST("/password/recover", handlers.RecoverPasswordHandler)
 
 	r.StaticFile("/swagger.yaml", "./docs/swagger.yaml")
+
 
 	if err := r.Run(":4000"); err != nil {
 		log.Fatal("Server failed to start:", err)
