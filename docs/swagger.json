@@ -1,0 +1,96 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API for sending survey emails to customers about restaurant experiences",
+        "title": "Survey Email Service API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/survey/send-mail": {
+            "post": {
+                "description": "Sends a customized survey email to a customer regarding their restaurant experience",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Email"
+                ],
+                "summary": "Send a survey email to a customer",
+                "parameters": [
+                    {
+                        "description": "Email request information",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.EmailRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "message:Survey email sent successfully",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "error:Invalid input",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "error:Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "models.EmailRequest": {
+            "description": "Email request information for sending surveys",
+            "type": "object",
+            "required": [
+                "email",
+                "name",
+                "restaurant"
+            ],
+            "properties": {
+                "email": {
+                    "description": "The customer's email address\n@example customer@example.com",
+                    "type": "string",
+                    "example": "customer@example.com"
+                },
+                "name": {
+                    "description": "The customer's full name\n@example John Doe",
+                    "type": "string",
+                    "example": "John Doe"
+                },
+                "restaurant": {
+                    "description": "The name of the restaurant visited\n@example The Great Restaurant",
+                    "type": "string",
+                    "example": "The Great Restaurant"
+                }
+            }
+        }
+    }
+}

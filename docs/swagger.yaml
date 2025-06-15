@@ -1,0 +1,73 @@
+basePath: /
+definitions:
+  models.EmailRequest:
+    description: Email request information for sending surveys
+    properties:
+      email:
+        description: |-
+          The customer's email address
+          @example customer@example.com
+        example: customer@example.com
+        type: string
+      name:
+        description: |-
+          The customer's full name
+          @example John Doe
+        example: John Doe
+        type: string
+      restaurant:
+        description: |-
+          The name of the restaurant visited
+          @example The Great Restaurant
+        example: The Great Restaurant
+        type: string
+    required:
+    - email
+    - name
+    - restaurant
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API for sending survey emails to customers about restaurant experiences
+  title: Survey Email Service API
+  version: "1.0"
+paths:
+  /survey/send-mail:
+    post:
+      consumes:
+      - application/json
+      description: Sends a customized survey email to a customer regarding their restaurant
+        experience
+      parameters:
+      - description: Email request information
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.EmailRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: message:Survey email sent successfully
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: error:Invalid input
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: error:Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Send a survey email to a customer
+      tags:
+      - Email
+swagger: "2.0"
