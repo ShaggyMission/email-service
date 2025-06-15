@@ -7,6 +7,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/cors"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	swaggerFiles "github.com/swaggo/files"
 )
 
 func main() {
@@ -26,6 +28,9 @@ func main() {
 
 	r.StaticFile("/swagger.yaml", "./docs/swagger.yaml")
 
+	r.GET("/swagger/*any", ginSwagger.CustomWrapHandler(&ginSwagger.Config{
+		URL: "/swagger.yaml",
+	}, swaggerFiles.Handler))
 
 	if err := r.Run(":4000"); err != nil {
 		log.Fatal("Server failed to start:", err)
