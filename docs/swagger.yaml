@@ -1,73 +1,178 @@
-basePath: /
-definitions:
-  models.EmailRequest:
-    description: Email request information for sending surveys
-    properties:
-      email:
-        description: |-
-          The customer's email address
-          @example customer@example.com
-        example: customer@example.com
-        type: string
-      name:
-        description: |-
-          The customer's full name
-          @example John Doe
-        example: John Doe
-        type: string
-      restaurant:
-        description: |-
-          The name of the restaurant visited
-          @example The Great Restaurant
-        example: The Great Restaurant
-        type: string
-    required:
-    - email
-    - name
-    - restaurant
-    type: object
-host: localhost:8080
+openapi: 3.0.0
 info:
-  contact: {}
-  description: API for sending survey emails to customers about restaurant experiences
-  title: Survey Email Service API
-  version: "1.0"
+  title: Password Recovery API - Shaggy Mission
+  version: 1.0.0
+  description: >
+    This API provides secure password recovery functionality for the Shaggy Mission platform.  
+    Users can request a password reset by providing their registered email address.  
+    **The email field marked with a red asterisk (*) is required.**  
+    If the email is missing, invalid format, or not found in the system, appropriate error responses will be returned.  
+    Upon successful request, a temporary password will be generated and sent to the user's email address.
+
+servers:
+  - url: http://localhost:4000
+    description: Development server
+
 paths:
-  /survey/send-mail:
+  /password/recover:
     post:
-      consumes:
-      - application/json
-      description: Sends a customized survey email to a customer regarding their restaurant
-        experience
-      parameters:
-      - description: Email request information
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/models.EmailRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: message:Survey email sent successfully
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "400":
-          description: error:Invalid input
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "500":
-          description: error:Internal server error
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: Send a survey email to a customer
+      summary: Request password recovery
+      description: >
+        Initiates a password recovery process for a registered user.  
+        Generates a secure temporary password, updates the user's password in the database,  
+        and sends a recovery email with the new temporary password.  
+        The temporary password expires in 24 hours for security purposes.
       tags:
-      - Email
-swagger: "2.0"
+        - Password Recovery
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@shaggymission.com
+                  description: >
+                    The registered email address of the user requesting password recovery.  
+                    **Required field.** Must be in valid email format and exist in the system.
+            examples:
+              valid_request:
+                summary: Valid recovery request
+                value:
+                  email: "volunteer@shaggymission.com"
+              invalid_email:
+                summary: Invalid email format
+                value:
+                  email: "invalid-email"
+      responses:
+        '200':
+          description: Password recovery initiated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Password reset successfully. Please check your email."
+              examples:
+                success_response:
+                  summary: Successful password recovery
+                  value:
+                    message: "Password reset successfully. Please check your email."
+        '400':
+          description: Bad Request – Invalid email format or missing required field
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Invalid email format"
+              examples:
+                invalid_email_format:
+                  summary: Invalid email format
+                  value:
+                    message: "Invalid email format"
+                missing_email:
+                  summary: Missing email field
+                  value:
+                    message: "Invalid email format"
+        '404':
+          description: Not Found – User with provided email does not exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "User not found or could not update password"
+              examples:
+                user_not_found:
+                  summary: User not found
+                  value:
+                    message: "User not found or could not update password"
+        '500':
+          description: Internal Server Error – Failed to send recovery email or database error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Failed to send recovery email"
+              examples:
+                email_send_failure:
+                  summary: Email delivery failed
+                  value:
+                    message: "Failed to send recovery email"
+                database_error:
+                  summary: Database operation failed
+                  value:
+                    message: "User not found or could not update password"
+
+components:
+  schemas:
+    RecoveryRequest:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+          format: email
+          description: Valid email address of registered user
+          example: "user@shaggymission.com"
+    
+    SuccessResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Success message confirming password recovery initiation
+          example: "Password reset successfully. Please check your email."
+    
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Error message describing the issue
+          example: "Invalid email format"
+
+  examples:
+    ValidRecoveryRequest:
+      summary: Valid password recovery request
+      description: Example of a properly formatted recovery request
+      value:
+        email: "volunteer@shaggymission.com"
+    
+    InvalidEmailRequest:
+      summary: Invalid email format request
+      description: Example of request with invalid email format
+      value:
+        email: "not-an-email"
+    
+    SuccessfulRecovery:
+      summary: Successful recovery response
+      description: Response when password recovery is initiated successfully
+      value:
+        message: "Password reset successfully. Please check your email."
+
+tags:
+  - name: Password Recovery
+    description: >
+      Operations related to password recovery functionality.  
+      Allows users to reset their forgotten passwords through email verification.
+
+externalDocs:
+  description: Find more info about Shaggy Mission
+  url: https://shaggymission.com
