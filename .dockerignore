@@ -1,0 +1,16 @@
+
+*.exe
+*.out
+*.test
+*.swp
+*.swo
+*.log
+*.DS_Store
+.vscode/
+.idea/
+*.iml
+.git
+.gitignore
+README.md
+LICENSE
+
