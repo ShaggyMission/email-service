@@ -16,5 +16,5 @@ RUN apk --no-cache add ca-certificates
 WORKDIR /app
 COPY --from=builder /app/email-service .
 
-EXPOSE 9003
+EXPOSE 4000
 ENTRYPOINT ["./email-service"]
