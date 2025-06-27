@@ -48,9 +48,9 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build . --file Dockerfile --tag lissethpacheco/user-update-service:${VERSION_TAG} --tag lissethpacheco/user-update-service:latest
-          docker push lissethpacheco/user-update-service:${VERSION_TAG}
-          docker push lissethpacheco/user-update-service:latest
+          docker build . --file Dockerfile --tag lissethpacheco/email-service:${VERSION_TAG} --tag lissethpacheco/email-service:latest
+          docker push lissethpacheco/email-service:${VERSION_TAG}
+          docker push lissethpacheco/email-service:latest
 
   deploy:
     name: Deploy to EC2
@@ -69,8 +69,8 @@ jobs:
             sudo docker --version || sudo apt-get update && sudo apt-get install -y docker.io
             sudo service docker start || true
 
-            sudo docker pull lissethpacheco/user-update-service:latest
+            sudo docker pull lissethpacheco/email-service:latest
 
-            sudo docker rm -f user-update-service 2>/dev/null || true
+            sudo docker rm -f email-service 2>/dev/null || true
 
-            sudo docker run -d --name user-update-service -p 3004:3004 lissethpacheco/user-update-service:latest
+            sudo docker run -d --name email-service -p 3004:3004 lissethpacheco/email-service:latest
