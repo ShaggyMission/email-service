@@ -10,7 +10,7 @@ import (
 var DB *gorm.DB
 
 func ConnectDB() *gorm.DB {
-    dsn := "admin:Lis.12345@tcp(shaggymission-db-server.cd5kwh1iyrrb.us-east-1.rds.amazonaws.com:3306)/user_service_db?charset=utf8mb4&parseTime=True&loc=Local"
+    dsn := "admin:Lis.12345@tcp(user-shaggy.cd5kwh1iyrrb.us-east-1.rds.amazonaws.com:3306)/user_service_db?charset=utf8mb4&parseTime=True&loc=Local"
     database, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
     if err != nil {
         log.Fatal("Failed to connect to database:", err)
