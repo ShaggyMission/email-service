@@ -1,4 +1,3 @@
-
 name: Go Docker CI/CD
 
 on:
@@ -73,4 +72,4 @@ jobs:
 
             sudo docker rm -f email-service 2>/dev/null || true
 
-            sudo docker run -d --name email-service -p 3004:3004 lissethpacheco/email-service:latest
+            sudo docker run -d --name email-service -p 4000:4000 lissethpacheco/email-service:latest
